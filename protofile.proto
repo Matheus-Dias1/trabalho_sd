@@ -1,0 +1,13 @@
+syntax = "proto3";
+package demo;
+
+message RequestSET {
+    int64 key = 1;
+    int64 timestamp = 2;
+    bytes data = 3;
+}
+
+message ResponseSET {
+    string status = 1;
+    string value = 2;
+}
