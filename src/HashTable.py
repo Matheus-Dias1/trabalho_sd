@@ -1,10 +1,15 @@
+import ast 
 
 class HashTable:
 
     def __init__ (self):
-        self.table = {}
+        self.table={}
+        f = open("tablefile", "r")
+        contents = f.read()
+        self.table = ast.literal_eval(contents)
+        f.close()
+        
 
-    
     def set(self, key, ts, data):
         if key in self.table:
             return ('ERROR', self.table[key])
