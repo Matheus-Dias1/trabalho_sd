@@ -12,7 +12,6 @@ class DBServiceServicer(DBServiceServicer):
 
     def periodicalSave(self):
         self.t.saveToDisk()
-        print('salvou')
         threading.Timer(int(sys.argv[1])*60, self.periodicalSave).start()
 
     def GET(self, request, context):
