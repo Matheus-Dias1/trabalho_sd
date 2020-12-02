@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;800&display=swap');
+
+
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+}
+
+.opSelector{
+  background-color: #0b132b;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  width: 150px;
+}
+
+.opSelectorButton {
+  height: 100px;
+  width: 100%;
+  text-align: center;
+  border-width: 2px;
+}
+
+.opSelectorButton:hover {
+  background-color: #1c2541;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.opSelectorButtonText{
+  height: 100%;
+  margin: 40px 0;
+  color: wheat;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+}
+
+.inputDataContainer{
+  width: 100%;
+  background-color: #3A506B;
+  padding: 20px;
+}
+
+.inputOutputContainer{
+  width: 100%;
+}
+
+
+.selected{
+  background-color: #1c2541;
+}
+
+.inputAnsDiv{
+  display: flex;
+  flex-direction: line;
+  align-items: center;
+  border-width: 2px;
+  border-color: wheat;
+  width: 130px;
+  background-color:white;
+  padding: 2px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  margin-right: 10px;
+}
+
+input{
+  margin-left: 10px;
+  width: 100%;
+  height: 30px;
+  border: none;
+  background: transparent;
+  border: 0;
+  border-style: none;
+  border-color: transparent;
+  outline: none;
+  outline-offset: 0;
+  box-shadow: none;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+}
+
+.inputButtonDiv{
+  display: flex;
+  flex-direction: line;
+}
+
+.sendButton{
+  display: flex;
+  width: 100px;
+  background-color: #1c2541;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  padding: auto 0;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  color: white;   
+  
+}
+
+.inputGroup{
+  display: flex;
+  flex-direction: row;
+}
+
+.outputDataContainer{
+  margin: 30px
+}
