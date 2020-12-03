@@ -1,9 +1,11 @@
 import ast 
 
+
 class HashTable:
 
     def __init__ (self):
         self.table={}
+        print('Carregando de arquivo...')
         f = open("tablefile", "r")
         contents = f.read()
         self.table = ast.literal_eval(contents)

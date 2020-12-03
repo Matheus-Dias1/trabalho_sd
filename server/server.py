@@ -16,7 +16,7 @@ class DBServiceServicer(DBServiceServicer):
     
     def periodicalSave(self):
         sem.acquire()
-        
+        print('Salvando em arquivo...')
         self.t.saveToDisk()
         threading.Timer(int(sys.argv[1])*60, self.periodicalSave).start()
         
@@ -69,7 +69,6 @@ class DBServiceServicer(DBServiceServicer):
 
     def DEL(self, request, context):
         sem.acquire()
-        
         key = request.key.key
         version = request.version
         if not version:
