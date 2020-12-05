@@ -5,22 +5,23 @@ from protos.protofile_pb2 import *
 import time, threading, asyncio
 import sys
 
+def periodicalSave():
+    sem.acquire()
+    print('Salvando em arquivo...')
+    table.saveToDisk()
+    threading.Timer(float(sys.argv[1]), periodicalSave).start()
+    
+    sem.release()
+
 table = HashTable()
 sem = threading.Semaphore(11)
+periodicalSave()
+
 
 class DBServiceServicer(DBServiceServicer):
     def __init__ (self):
         self.t = table
-        self.periodicalSave()
-        
-    
-    def periodicalSave(self):
-        sem.acquire()
-        print('Salvando em arquivo...')
-        self.t.saveToDisk()
-        threading.Timer(int(sys.argv[1])*60, self.periodicalSave).start()
-        
-        sem.release()
+
 
     def GET(self, request, context):
         sem.acquire()
@@ -33,11 +34,12 @@ class DBServiceServicer(DBServiceServicer):
                 timestamp = ret[1][1],
                 data = ret[1][2]
             )
+        sem.release()
         return ResponseGET (
             status = ret[0],
             value = value
         )
-        sem.release()
+        
 
     def SET(self, request, context):
         sem.acquire()
@@ -57,14 +59,14 @@ class DBServiceServicer(DBServiceServicer):
                 timestamp = ret[1][1],
                 data = ret[1][2]
             )
-
+        sem.release()
         return ResponseSET (
             status = ret[0],
             value = value
         )
 
         
-        sem.release()
+        
             
 
     def DEL(self, request, context):
@@ -84,13 +86,13 @@ class DBServiceServicer(DBServiceServicer):
                 timestamp = ret[1][1],
                 data = ret[1][2]
             )
-
+        sem.release()
         return ResponseDEL (
             status = ret[0],
             value = value
         )
 
-        sem.release()
+        
             
 
     def TESTANDSET(self, request, context):
@@ -112,13 +114,13 @@ class DBServiceServicer(DBServiceServicer):
                 timestamp = ret[1][1],
                 data = ret[1][2]
             )
-
+        sem.release()
         return ResponseSET (
             status = ret[0],
             value = value
         )
 
-        sem.release()
+        
             
 
 
