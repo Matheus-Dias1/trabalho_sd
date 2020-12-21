@@ -5,27 +5,37 @@ from protos.protofile_pb2 import *
 import time, threading, asyncio
 import sys
 
-def periodicalSave():
+# def periodicalSave():
+#     sem.acquire()
+#     print('Salvando em arquivo...')
+#     table.saveToDisk()
+#     threading.Timer(float(sys.argv[1]), periodicalSave).start()
+    
+#     sem.release()
+
+def periodicalPrint():
     sem.acquire()
-    print('Salvando em arquivo...')
-    table.saveToDisk()
-    threading.Timer(float(sys.argv[1]), periodicalSave).start()
+    table.showTable()
+    threading.Timer(5, periodicalPrint).start()
     
     sem.release()
 
-table = HashTable()
+table = HashTable('localhost:9091', ['localhost:9090', 'localhost:9092'])
 sem = threading.Semaphore(11)
-periodicalSave()
+# periodicalSave()
+periodicalPrint()
 
 
 class DBServiceServicer(DBServiceServicer):
     def __init__ (self):
+
         self.t = table
 
 
     def GET(self, request, context):
         sem.acquire()
-        ret = self.t.get(request.key.key)
+        self.t.get(request.key.key)
+        ret = self.t.ret
         if ret[1] == None:
             value = None
         else:
@@ -40,7 +50,6 @@ class DBServiceServicer(DBServiceServicer):
             value = value
         )
         
-
     def SET(self, request, context):
         sem.acquire()
         
@@ -48,9 +57,9 @@ class DBServiceServicer(DBServiceServicer):
         ts = request.timestamp
         data = request.data
 
-        ret = self.t.set(key, ts, data)
 
-
+        self.t.set(key, ts, data)
+        ret = self.t.ret
         if ret[1] == None:
             value = None
         else:
@@ -59,6 +68,7 @@ class DBServiceServicer(DBServiceServicer):
                 timestamp = ret[1][1],
                 data = ret[1][2]
             )
+        
         sem.release()
         return ResponseSET (
             status = ret[0],
@@ -66,9 +76,6 @@ class DBServiceServicer(DBServiceServicer):
         )
 
         
-        
-            
-
     def DEL(self, request, context):
         sem.acquire()
         key = request.key.key
@@ -76,8 +83,8 @@ class DBServiceServicer(DBServiceServicer):
         if not version:
             version = None
 
-        ret = self.t.delete(key, version)
-        
+        self.t.delete(key, version)
+        ret = self.t.ret
         if ret[1] == None:
             value = None
         else:
@@ -94,7 +101,6 @@ class DBServiceServicer(DBServiceServicer):
 
         
             
-
     def TESTANDSET(self, request, context):
         sem.acquire()
 
@@ -104,7 +110,9 @@ class DBServiceServicer(DBServiceServicer):
         ts = request.keyValue.value.timestamp
         data = request.keyValue.value.data
 
-        ret = self.t.testAndSet(key, (newVers, ts, data), oldVers)
+
+        self.t.testAndSet(key, (newVers, ts, data), oldVers)
+        ret = self.t.ret
 
         if ret[1] == None:
             value = None
@@ -128,7 +136,7 @@ def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     add_DBServiceServicer_to_server(
         DBServiceServicer(), server)
-    server.add_insecure_port('[::]:9090')
+    server.add_insecure_port('localhost:9091')
     server.start()
     server.wait_for_termination()
 
